@@ -1,4 +1,9 @@
-<p align="center"><img src="smartalex/assets/logo.png" alt="SmartAlex" width="96"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="smartalex/assets/wordmark-on-dark.png">
+    <img src="smartalex/assets/wordmark-on-light.png" alt="SmartAlex" width="200">
+  </picture>
+</p>
 
 **Run your SmartAlex AI phone team from your coding agent.** One plugin for Claude Code, Codex
 and Cursor: a connection to your SmartAlex account plus skills that show the agent how to use it.
