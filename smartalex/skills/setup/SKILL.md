@@ -52,23 +52,49 @@ ask the user to install **SmartAlex** from **Plugins**.
 
 Read `cursor-install.md` in this directory and follow it, then come back to step 3.
 
-## 3. Sign in
+## 3. Sign in (you start it, the user finishes it in the browser)
 
-Sign-in happens in the user's browser. You cannot do it for them and must not try to drive a
-browser to do it.
+Start the sign-in yourself, right now, in this session. Do not tell the user to go and find a
+menu. The command opens the user's browser on a SmartAlex page; they sign in and press **Allow**,
+and the command finishes on its own. Never try to fill in the page for them.
 
-- **Claude Code:** ask the user to type `/mcp`, pick `smartalex`, and choose **Authenticate**.
-- **Codex:** run `codex mcp login smartalex`. It prints a link and waits. If your shell timeout is
-  shorter than the sign-in, ask the user to run that command in their own terminal instead.
-- **Cursor:** ask the user to open **Settings → Tools & MCP** (older builds: **MCP**), find
-  `smartalex`, and press **Connect** or **Authenticate**.
+**Claude Code**
 
-A SmartAlex page opens, asks them to sign in, and asks them to allow access. After they allow it,
-the browser hands them back to the agent.
+```bash
+claude mcp login plugin:smartalex:smartalex
+```
 
-Some agents only load tools for a new server in a new chat or after a restart. If the tools still
-do not appear after sign-in, ask the user to start a new chat (Claude Code, Codex) or fully quit
-and reopen Cursor.
+**Codex**
+
+```bash
+codex mcp login smartalex
+```
+
+(`codex mcp list` shows the exact server name if that one is not found.)
+
+**Cursor**
+
+If the `cursor-agent` command exists, run `cursor-agent mcp login smartalex`. Otherwise ask the
+user to open **Settings → Tools & MCP**, find `smartalex`, and press **Connect**.
+
+The command waits for the browser, up to about 5 minutes:
+
+- If your shell tool lets you set a timeout, ask for at least 5 minutes and run it directly.
+- If it does not, run it in the background so it survives your timeout, for example
+  `nohup claude mcp login plugin:smartalex:smartalex > /tmp/smartalex-login.log 2>&1 &`, then
+  poll `claude mcp list` (or `codex mcp list`) every few seconds until `smartalex` shows
+  **Connected**.
+- If no browser opened (a remote or headless machine), show the user the sign-in link from the
+  command's output and ask them to open it.
+
+Tell the user in one line what is happening, for example: "A SmartAlex sign-in page just opened
+in your browser. Sign in and press Allow; I'll carry on as soon as you do."
+
+When the command finishes, confirm with `claude mcp list` (or `codex mcp list`) that `smartalex`
+shows **Connected**, then go to step 5. If the `smartalex_*` tools are still not available to
+you in this session, they load in a new chat (Claude Code: `/mcp` → `smartalex` → **Reconnect**
+also works; Cursor: fully quit and reopen). Say so in one line; the sign-in itself is done and
+does not need repeating.
 
 ## 4. Fix the common failures
 
@@ -82,8 +108,12 @@ and reopen Cursor.
 
 ## 5. Verify and hand over
 
-Call `smartalex_get_platform_status` and tell the user, in one line, that SmartAlex is connected
-and how many contacts, campaigns and calls they have. Keep account details to yourself unless they
-help fix a problem.
+If the `smartalex_*` tools are available, call `smartalex_get_platform_status` and tell the user,
+in one line, that SmartAlex is connected and how many contacts, campaigns and calls they have.
+Keep account details to yourself unless they help fix a problem.
+
+If they are not available in this session yet, `smartalex` showing **Connected** in
+`claude mcp list` / `codex mcp list` is the proof. Tell the user setup is done and that the
+SmartAlex tools are ready in a new chat.
 
 Then run the `smartalex` skill, which explains what the user can do next.

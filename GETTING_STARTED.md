@@ -64,9 +64,11 @@ finishes, delete the clone (`rm -rf /tmp/smartalex-plugin`).
 
 ## Run the `setup` skill
 
-Run the bundled **`setup`** skill now, in this session, before anything else. It confirms the
-SmartAlex connection is registered, gets the user signed in, and proves it works with one
-read-only call.
+Run the bundled **`setup`** skill now, in this session, before anything else. There are three
+steps, and you do all of them: (1) the plugin is installed, (2) you start the sign-in yourself
+(`claude mcp login plugin:smartalex:smartalex` or `codex mcp login smartalex`), which opens a
+SmartAlex page in the user's browser where they press **Allow**, and (3) you confirm the
+connection with one read-only call. Do not send the user to a menu to sign in.
 
 - Invoke it by its full name, `smartalex:setup`, if your agent supports that.
 - If the skill does not show up yet (some agents only register a new plugin after a restart),
