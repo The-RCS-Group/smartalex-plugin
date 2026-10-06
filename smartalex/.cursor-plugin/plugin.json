@@ -1,0 +1,16 @@
+{
+  "name": "smartalex",
+  "version": "0.1.0",
+  "description": "Run your SmartAlex AI phone team from Cursor: voice agents, contacts, campaigns, calls, deals, webhooks and the website widget.",
+  "author": {
+    "name": "SmartAlex",
+    "email": "support@getsmartalex.com"
+  },
+  "homepage": "https://docs.getsmartalex.com/mcp/overview",
+  "repository": "https://github.com/The-RCS-Group/smartalex-plugin",
+  "license": "MIT",
+  "keywords": ["voice agent", "phone", "calls", "campaigns", "crm", "widget", "mcp"],
+  "logo": "assets/logo.svg",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}

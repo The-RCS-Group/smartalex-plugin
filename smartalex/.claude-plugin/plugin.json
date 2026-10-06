@@ -1,0 +1,14 @@
+{
+  "name": "smartalex",
+  "description": "Run your SmartAlex AI phone team from Claude Code: voice agents, contacts, campaigns, calls, deals, webhooks and the website widget.",
+  "version": "0.1.0",
+  "author": {
+    "name": "SmartAlex",
+    "email": "support@getsmartalex.com",
+    "url": "https://getsmartalex.com"
+  },
+  "homepage": "https://docs.getsmartalex.com/mcp/overview",
+  "repository": "https://github.com/The-RCS-Group/smartalex-plugin",
+  "license": "MIT",
+  "keywords": ["voice agent", "phone", "calls", "campaigns", "crm", "widget", "mcp"]
+}

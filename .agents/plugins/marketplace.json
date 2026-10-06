@@ -1,0 +1,20 @@
+{
+  "name": "smartalex-plugins",
+  "interface": {
+    "displayName": "SmartAlex"
+  },
+  "plugins": [
+    {
+      "name": "smartalex",
+      "source": {
+        "source": "local",
+        "path": "./smartalex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

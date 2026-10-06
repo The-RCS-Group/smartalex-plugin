@@ -1,0 +1,17 @@
+{
+  "name": "smartalex-plugins",
+  "owner": {
+    "name": "SmartAlex",
+    "email": "support@getsmartalex.com"
+  },
+  "metadata": {
+    "description": "Official SmartAlex plugins for Cursor"
+  },
+  "plugins": [
+    {
+      "name": "smartalex",
+      "source": "./smartalex",
+      "description": "Run your SmartAlex AI phone team from Cursor"
+    }
+  ]
+}

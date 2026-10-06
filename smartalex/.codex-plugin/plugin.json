@@ -1,0 +1,32 @@
+{
+  "name": "smartalex",
+  "version": "0.1.0",
+  "description": "Run your SmartAlex AI phone team from Codex: voice agents, contacts, campaigns, calls, deals, webhooks and the website widget.",
+  "author": {
+    "name": "SmartAlex",
+    "email": "support@getsmartalex.com",
+    "url": "https://getsmartalex.com"
+  },
+  "homepage": "https://docs.getsmartalex.com/mcp/overview",
+  "repository": "https://github.com/The-RCS-Group/smartalex-plugin",
+  "license": "MIT",
+  "keywords": ["voice agent", "phone", "calls", "campaigns", "crm", "widget", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "SmartAlex",
+    "shortDescription": "Your AI phone team, run from Codex",
+    "longDescription": "Build and update SmartAlex voice agents, add the voice widget to your site, wire call events into your backend, call a list and review what happened on today's calls.",
+    "developerName": "SmartAlex",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://getsmartalex.com",
+    "privacyPolicyURL": "https://getsmartalex.com/legal/privacy",
+    "termsOfServiceURL": "https://getsmartalex.com/legal/terms",
+    "defaultPrompt": [
+      "Add the SmartAlex voice widget to this site",
+      "Summarise today's SmartAlex calls"
+    ],
+    "logo": "./assets/logo.png"
+  }
+}

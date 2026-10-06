@@ -1,0 +1,20 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SmartAlex">
+  <!-- The "al" mark flips with the browser's colour scheme: navy on a light tab,
+       white on a dark tab. The pulse bar (green to purple) stays in both. -->
+  <style>
+    .sa-mark { stroke: #010033; }
+    @media (prefers-color-scheme: dark) { .sa-mark { stroke: #ffffff; } }
+  </style>
+  <defs>
+    <linearGradient id="sa-pulse" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="55%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#3b2999"/>
+    </linearGradient>
+  </defs>
+  <g class="sa-mark" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="24" cy="38" r="9"/>
+    <line x1="33" y1="28" x2="33" y2="48"/>
+  </g>
+  <rect x="42" y="14" width="6" height="34" rx="3" fill="url(#sa-pulse)"/>
+</svg>

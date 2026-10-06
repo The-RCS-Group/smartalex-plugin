@@ -1,0 +1,16 @@
+{
+  "name": "smartalex-plugins",
+  "owner": {
+    "name": "SmartAlex"
+  },
+  "metadata": {
+    "description": "Official SmartAlex plugins for Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "smartalex",
+      "source": "./smartalex",
+      "description": "Run your SmartAlex AI phone team from Claude Code"
+    }
+  ]
+}
