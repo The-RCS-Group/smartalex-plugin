@@ -38,7 +38,7 @@ Anything else, use the tools below directly.
 | Deals | `smartalex_list_deals`, `smartalex_create_deal`, `smartalex_update_deal`, `smartalex_delete_deal` |
 | Webhooks | `smartalex_list_webhooks`, `smartalex_create_webhook`, `smartalex_delete_webhook` |
 | Website | `smartalex_get_widget_install_code` |
-| Knowledge | `smartalex_search_company_knowledge` (answers from the business's own knowledge base) |
+| Knowledge | `smartalex_search_company_knowledge` (searches SmartAlex's own help docs: plans, pricing, setup and policies. It does not search the user's business knowledge base, so never present its answers as the user's own prices or policies) |
 
 Some tools only appear on plans that include them: campaigns and buying numbers need the
 **Outbound** add-on, creating webhooks needs **Power Tools**. A missing tool means the plan does

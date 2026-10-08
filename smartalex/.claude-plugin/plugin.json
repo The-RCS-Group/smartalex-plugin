@@ -1,7 +1,7 @@
 {
   "name": "smartalex",
   "description": "Run your SmartAlex AI phone team from Claude Code: voice agents, contacts, campaigns, calls, deals, webhooks and the website widget.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "SmartAlex",
     "email": "support@getsmartalex.com",
