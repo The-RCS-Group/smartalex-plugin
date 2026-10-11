@@ -53,12 +53,16 @@ curl -fsSL https://raw.githubusercontent.com/The-RCS-Group/smartalex-plugin/main
 | `.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/` | Marketplace files for Claude Code, Cursor and Codex |
 | `smartalex/.mcp.json`, `smartalex/mcp.json` | The connection to `https://mcp.getsmartalex.com` (sign-in by OAuth, no keys in files) |
 | `smartalex/skills/setup` | Connect, sign in and verify |
-| `smartalex/skills/smartalex` | The map: every tool, which skill does what, and the safety rules |
+| `smartalex/skills/smartalex` | The map: every tool, which skill does what, the confirmation step and the safety rules |
 | `smartalex/skills/add-voice-widget` | Put the voice and chat widget on the site in this codebase |
 | `smartalex/skills/webhooks` | Receive signed call events in your own backend |
-| `smartalex/skills/build-an-agent` | Create or change a voice agent |
-| `smartalex/skills/call-a-list` | Phone a list as a campaign, only after you confirm |
-| `smartalex/skills/todays-calls` | What happened on today's calls, and who to follow up |
+| `smartalex/skills/build-an-agent` | Create, change and test-call a voice agent, and manage what it knows |
+| `smartalex/skills/connect-an-api` | Let an agent use your own API during calls (keys stay in the web app) |
+| `smartalex/skills/call-a-list` | Phone a list as a campaign, and change, pause or resume it, only after you confirm |
+| `smartalex/skills/todays-calls` | What happened on today's calls or a whole campaign, who to follow up, the month's figures, and the call records export |
+| `smartalex/skills/callbacks` | Who asked to be called back, call them back, reschedule or cancel; block and unblock callers |
+| `smartalex/skills/phone-numbers` | Which agent answers each number, move a number, buy or release one |
+| `smartalex/skills/team-and-settings` | Invite colleagues, change roles, business hours and your own notifications |
 
 No server code lives here. The plugin only points your agent at SmartAlex and teaches it the
 workflows.

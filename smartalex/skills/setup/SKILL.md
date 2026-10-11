@@ -102,8 +102,10 @@ does not need repeating.
 |---|---|---|
 | "Invalid or expired token" straight after a successful sign-in | The account has no active workspace yet. This happens to brand-new sign-ups. | Ask the user to sign in once at <https://getsmartalex.com>, finish onboarding until they see their dashboard, then sign in again (step 3). |
 | Sign-in page says the link expired | The sign-in took too long or was started twice. | Start step 3 again and use only the newest link. |
-| Campaign tools or `smartalex_buy_phone_number` are missing | They need the **Outbound** add-on. Creating or deleting webhooks needs **Power Tools**. Tools the plan does not include are hidden, not broken. | Tell the user which add-on unlocks it. Add-ons are bought at <https://getsmartalex.com/account/billing>. |
-| `smartalex_create_agent` is missing | Every agent slot on the plan is in use. | The user can delete an unused agent or add a slot in billing. |
+| A tool says the sign-in has expired (401), after it worked before | The connection was signed out. Signing in to the SmartAlex website with two-step login does this. | Start step 3 again. Nothing else needs fixing. |
+| Campaign tools or `smartalex_buy_phone_number` are missing | They need the **Outbound Calling** add-on. API tools and creating or deleting webhooks need **Power Tools**. Tools the plan, add-ons or role do not allow are hidden, not broken. | Tell the user which add-on unlocks it. Add-ons are bought in **Settings → Billing** (<https://getsmartalex.com/account?tab=billing>). |
+| `smartalex_create_agent` is missing | Every agent slot on the plan is in use. | The user can delete an unused agent, or add a slot (`smartalex_buy_agent_slot`, or **Settings → Billing**). |
+| A tool is refused with "your role can't do this" (403) | Their role in this workspace does not allow it. | Suggest asking a workspace owner or admin. Signing in again will not change it. |
 | Server unreachable | Network or proxy problem. | Check `curl -sI https://mcp.getsmartalex.com` returns a response. Do not restart sign-in for a network error. |
 
 ## 5. Verify and hand over

@@ -1,23 +1,47 @@
 ---
 name: call-a-list
-description: Have a SmartAlex voice agent phone a list of people as a campaign. Use when the user says "call these leads", "phone everyone on this list", "run a follow-up campaign", "ring my contacts about X", or hands over a CSV of people to call. Always confirms before any call is placed.
+description: Have a SmartAlex voice agent phone a list of people as a campaign, and change, pause, resume or stop a campaign. Use when the user says "call these leads", "call my last 10 prospects and try each one 4 times", "phone everyone on this list", "run a follow-up campaign", "ring my contacts about X", "pause the campaign", or hands over a CSV of people to call. Always confirms before any call is placed.
 ---
 
 # Call a list with SmartAlex
 
-This phones real people. Nothing is dialled until the user says yes to the exact summary in
-step 5.
+This phones real people. Nothing is dialled until the user says yes to a preview. Follow "The
+confirmation step" in the `smartalex` skill for every tool here that has a `confirm_token`.
 
-Campaign tools need the **Outbound** add-on. If `smartalex_create_campaign` is not available, tell
-the user that, and stop.
+Campaign tools need the **Outbound Calling** add-on. If `smartalex_create_campaign` is not
+available, check `smartalex_get_plan_and_usage` (if you have it), tell the user what unlocks it,
+and stop.
+
+## Example: "call my last 10 prospects and try each one 4 times"
+
+1. **Find them.** `smartalex_list_contacts` lists the newest first. Filter to prospects with
+   `status` or `tag`, whichever their contacts use (look at a few first), and `per_page: 10`. If
+   the user said how to tell (for example "my 10 newest contacts"), do that. If nothing marks a
+   contact as a prospect and the user did not say, ask how to tell; that cannot be guessed.
+2. **Agent and number.** Steps 2 and 3 below.
+3. **Create the campaign** with `max_attempts: 4` and the defaults below for anything the user did
+   not say (step 4). Do not stop to ask about them. Read it back and check the tries are 4.
+4. **Add the 10.** `smartalex_add_contacts_to_campaign`. The preview says nobody is called until the
+   campaign starts. Show it with the summary in step 6, including the defaults you chose, ask, and
+   send the token only after a yes. The user can change any default in their answer.
+5. **Start.** `smartalex_start_campaign`. The preview says 10 people will be phoned. Show it with
+   the summary in step 6, ask, and send the token only after a yes.
+6. **Tell them it has started**, and how to check progress.
+
+If the user also asks for a text after the last try, say that SmartAlex cannot do that (see "Text
+messages" below) and carry on with the calls.
 
 ## 1. Who to call
 
-- From existing contacts: `smartalex_list_contacts`, paging through as needed, and filter by what
-  the user asked for (tag, company, status).
-- From a file or a list they give you: for each person, find them in the contacts first. Create
-  only the ones that do not exist yet with `smartalex_create_contact` (phone numbers in E.164, for
-  example `+27821234567`). Never create the same person twice.
+- **Existing contacts:** `smartalex_list_contacts`. Use its filters rather than paging through
+  everything: `search` (name, phone or email), `tag`, `status`, `created_after`, `never_called`,
+  `last_called_before`. It returns a total count, so you can say how many match before going on.
+- **A file or a list they give you:** `smartalex_import_contacts` takes up to 1000 rows per call.
+  It matches existing contacts the same way creating one contact does, so nobody is added twice, and
+  returns how many were created, updated and skipped, with a reason for each skip. Tell the user
+  those numbers and the skip reasons. If the tool is not available, look each person up first and
+  create only the missing ones with `smartalex_create_contact`. Never create the same person twice.
+- Phone numbers go in E.164, for example `+27821234567`.
 
 Drop anyone with no phone number and tell the user how many you dropped.
 
@@ -27,43 +51,108 @@ calling hours) are their responsibility and ask them to confirm they have consen
 
 ## 2. Which agent
 
-`smartalex_list_agents`. If there is more than one outbound-capable agent, ask which one. If the
-agent's objective does not fit this campaign, set the campaign's own `objective` in step 4 rather
-than changing the agent.
+`smartalex_list_agents`. If only one agent can make calls (`call_direction` outbound or both), use
+it without asking. If there is more than one and the user did not name one, ask which; that cannot
+be guessed. If the agent's objective does not fit this campaign, set the campaign's own `objective`
+in step 4 rather than changing the agent.
 
 ## 3. Which number
 
-`smartalex_list_phone_numbers` and ask which number to call from. Prefer a number in the same
-country as the people being called. If there are none, say so; buying one is a monthly charge and
-needs its own yes (`smartalex_search_available_numbers`, then `smartalex_buy_phone_number`).
+`smartalex_list_phone_numbers`. Pick the number yourself and say which: the only one; otherwise
+one in the same country as the people being called; otherwise one on the chosen agent. Ask only if
+that still leaves a real choice. If there are none, say so and stop; never buy one unasked. Buying
+is a monthly charge with its own confirmation (the `phone-numbers` skill).
 
-## 4. Create the campaign and add people
+## 4. Create the campaign
 
-1. `smartalex_create_campaign` with `name`, `agent_id`, `phone_number_id`, `objective` (what the
-   agent should achieve on each call), `timezone` (the people's time zone, IANA format), and
-   `business_hours` for the days and times calls are allowed.
-2. `smartalex_add_contacts_to_campaign` with the contact ids, at most 100 per call. Repeat for
-   larger lists. Duplicates are skipped automatically.
+`smartalex_create_campaign` with:
 
-Creating and filling a campaign places no calls.
+- `name`, `agent_id`, `phone_number_id`
+- `objective`: what the agent should achieve on each call
+- `timezone`: the people's time zone, IANA format
+- `business_hours`: the days and times calls are allowed
+- `max_attempts` and `retry_delay_minutes`, when the user wants more than one try
 
-## 5. Confirm, then start
+**How tries work.** `max_attempts` is the total number of calls each person can get, the first one
+included, so "try 4 times" is `max_attempts: 4` (10 at most). Only calls nobody answered (no
+answer, busy, voicemail) are tried again; a person who answers is not called again.
+`retry_delay_minutes` is the wait between tries, 10 minutes at least.
 
-Show this and wait for a clear yes:
+**Defaults.** For anything the user did not say, use these and list them in the summary (step 6).
+Do not ask about them first; the user can change them when they answer the preview.
+
+| Setting | Default |
+|---|---|
+| `name` | What the calls are for and the date, for example "Prospect follow-up, 10 Oct" |
+| `objective` | What the user asked for, in one sentence; otherwise the agent's own objective |
+| `timezone` | The people's time zone, from their numbers' country; the workspace's if they are mixed |
+| `business_hours` | Monday to Friday, 09:00 to 17:00 in that time zone (the web app's default) |
+| `retry_delay_minutes` | 60 minutes (the web app's default), when there is more than one try |
+
+Read the campaign back with `smartalex_get_campaign`. If `max_attempts` is not what the user asked
+for, the setting was not taken. Say so plainly and point them to **Pipeline → Campaigns**, open the
+campaign, and edit it there. Never tell the user retries are set when they are not.
+
+Creating a campaign places no calls.
+
+## 5. Add the people
+
+`smartalex_add_contacts_to_campaign` with the contact ids, at most 100 per call. Repeat for larger
+lists. People already in the campaign are skipped.
+
+On a campaign that has not started, the preview says nobody is called yet. On a running campaign
+the people added start getting calls, so treat it like starting a campaign.
+
+## 6. Confirm, then start or schedule
+
+Show the preview together with this summary, then ask:
 
 ```
-Campaign:   <name>
-Agent:      <agent name>
-Calling from: <number>
-People:     <count>
-Objective:  <objective>
-Hours:      <days and times, time zone>
+Campaign:      <name>
+Agent:         <agent name>
+Calling from:  <number>
+People:        <count from the preview>
+Tries:         <max_attempts> per person, <retry_delay_minutes> minutes apart
+Objective:     <objective>
+Hours:         <days and times, time zone>
+Cost:          <as the preview says>
 ```
 
-Only after a yes, call `smartalex_start_campaign`. If they want changes, make them and show the
-summary again.
+- To call now: `smartalex_start_campaign`.
+- To start later: `smartalex_schedule_campaign` with the start time. Its preview gives the time in
+  the workspace's time zone; check it is the time the user meant before asking.
 
-## 6. Afterwards
+Only after a clear yes, call it again with the `confirm_token`. If they want changes, make them and
+start the preview again.
 
-Tell the user the campaign has started and that they can ask for progress at any time. For
-progress use `smartalex_get_campaign`; for results, the `todays-calls` skill.
+## 7. Afterwards
+
+Tell the user the campaign has started (or when it will) and that they can ask for progress at any
+time. For progress use `smartalex_get_campaign` (`pending_contacts` is how many are still waiting);
+for results, the `todays-calls` skill.
+
+## Changing a campaign
+
+Read the campaign first with `smartalex_get_campaign`, and change only what the user asked for.
+
+| The user wants to... | Tool |
+|---|---|
+| Change the name, objective, agent, number, tries, wait between tries, calling hours, how many calls run at once, or the voicemail and text settings | `smartalex_update_campaign`. Some settings cannot change while the campaign is running; the tool says which. |
+| Stop calling for now | `smartalex_pause_campaign`. No new calls are placed until it is resumed. |
+| Carry on calling | `smartalex_resume_campaign`. The preview says how many people are still waiting. |
+| Start at a set time | `smartalex_schedule_campaign` |
+| Take people out of it | `smartalex_remove_contacts_from_campaign` |
+| End it for good | `smartalex_stop_campaign`. It cannot be restarted. Offer pause instead unless they clearly want it over. |
+
+If one of these tools is not available, they can do it in the web app: **Pipeline → Campaigns**,
+then open the campaign.
+
+## Text messages
+
+SmartAlex cannot send a text after a campaign's last call attempt. Never offer it, promise it, or
+build a workaround for it (no extra campaign, no other tool). If the user asks for it, say plainly
+that it is not available today.
+
+A campaign's own text options are different: one text per person after their first missed call,
+and a text after an answered call. Neither waits for the last attempt. If the user asks about them,
+describe them only that way.

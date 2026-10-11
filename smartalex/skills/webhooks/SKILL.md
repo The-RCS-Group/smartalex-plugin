@@ -8,8 +8,10 @@ description: Send SmartAlex events (a call finished, a contact or deal was creat
 SmartAlex POSTs a JSON event to an HTTPS address you choose. You build the receiving endpoint in
 this codebase, deploy it, then subscribe it.
 
-Creating webhooks needs the **Power Tools** add-on. If `smartalex_create_webhook` is not available,
-tell the user that, and stop.
+Creating webhooks needs the **Power Tools** add-on, and only workspace owners and admins can manage
+webhooks. If `smartalex_create_webhook` is not available, check `smartalex_get_plan_and_usage` (if
+you have it): name the add-on if the plan lacks it, otherwise suggest asking an owner or admin. Then
+stop.
 
 ## Events
 

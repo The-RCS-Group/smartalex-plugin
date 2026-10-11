@@ -13,7 +13,8 @@ agent to your SmartAlex account and teaches it how to use it.
 - A connection to `https://mcp.getsmartalex.com`, the SmartAlex MCP server. You sign in with
   your SmartAlex account in the browser. No API key is stored in any file.
 - A set of skills that tell the agent how to do real jobs safely: add the voice widget to a site,
-  wire call events into a backend, build a voice agent, call a list, and review today's calls.
+  wire call events into a backend, build and test a voice agent, connect it to your own API, call
+  a list, and review your calls.
 
 **Before you start:** you need a SmartAlex account. Sign up at
 <https://getsmartalex.com/signup> if you do not have one yet, then come back.
