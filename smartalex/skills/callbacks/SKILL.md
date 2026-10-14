@@ -6,7 +6,7 @@ description: See who asked to be called back, call them back now, reschedule or 
 # Callbacks and blocked callers
 
 This mirrors two web app pages: **Calls → Callbacks** and **Calls → Blocked Callers**. For every
-tool here with a `confirm_token`, follow "The confirmation step" in the `smartalex` skill.
+tool here with a `confirm_token`, follow "The confirmation step" in the `smartalex` skill. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 ## How callbacks work
 

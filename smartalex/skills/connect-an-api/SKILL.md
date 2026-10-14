@@ -78,7 +78,7 @@ the address when the user gave none, or which agent when there are several and t
 - `smartalex_update_http_tool`: change the name, description, address, parameters or sign-in type.
   The same rules apply, and the address is checked again. Never the secret.
 - `smartalex_detach_http_tool_from_agent`: that agent stops using it; other agents keep it.
-- `smartalex_delete_http_tool`: deletes it for good, for every agent. It has a confirmation step.
+- `smartalex_delete_http_tool`: deletes it for good, for every agent. It has a confirmation step. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
   If the user only wants one agent to stop using it, detach it instead.
 
 If these tools are not available, the user can do all of this in the web app: **Agent Settings →

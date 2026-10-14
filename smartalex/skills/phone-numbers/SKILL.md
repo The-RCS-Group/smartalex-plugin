@@ -6,7 +6,7 @@ description: Manage the business's SmartAlex phone numbers. See which agent answ
 # Phone numbers
 
 This mirrors the web app's **Calls → Numbers** page. For every tool here with a `confirm_token`,
-follow "The confirmation step" in the `smartalex` skill.
+follow "The confirmation step" in the `smartalex` skill. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 ## How numbers and agents fit together
 

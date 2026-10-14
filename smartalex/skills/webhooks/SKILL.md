@@ -85,7 +85,7 @@ The response contains a **`signing_secret`, shown once only**. Immediately:
   already covers, as `SMARTALEX_WEBHOOK_SECRET`;
 - never write it into a tracked file, a commit, a log line or your reply.
 
-If the secret is lost, delete the webhook (`smartalex_delete_webhook`, after the user agrees) and
+If the secret is lost, delete the webhook (`smartalex_delete_webhook`, after the user has seen its preview and agreed) and
 create a new one.
 
 ## 3. Check

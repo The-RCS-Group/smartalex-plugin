@@ -6,7 +6,7 @@ description: Have a SmartAlex voice agent phone a list of people as a campaign, 
 # Call a list with SmartAlex
 
 This phones real people. Nothing is dialled until the user says yes to a preview. Follow "The
-confirmation step" in the `smartalex` skill for every tool here that has a `confirm_token`.
+confirmation step" in the `smartalex` skill for every tool here that has a `confirm_token`. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 Campaign tools need the **Outbound Calling** add-on. If `smartalex_create_campaign` is not
 available, check `smartalex_get_plan_and_usage` (if you have it), tell the user what unlocks it,
@@ -24,9 +24,13 @@ and stop.
 4. **Add the 10.** `smartalex_add_contacts_to_campaign`. The preview says nobody is called until the
    campaign starts. Show it with the summary in step 6, including the defaults you chose, ask, and
    send the token only after a yes. The user can change any default in their answer.
-5. **Start.** `smartalex_start_campaign`. The preview says 10 people will be phoned. Show it with
+   **In the same message, ask what the calls are for** (the purpose, step 4): "prospects" does not
+   say whether it is selling, following up or booking appointments, and a campaign without a
+   purpose cannot start.
+5. **Set the purpose** from their answer with `smartalex_update_campaign`.
+6. **Start.** `smartalex_start_campaign`. The preview says 10 people will be phoned. Show it with
    the summary in step 6, ask, and send the token only after a yes.
-6. **Tell them it has started**, and how to check progress.
+7. **Tell them it has started**, and how to check progress.
 
 If the user also asks for a text after the last try, say that SmartAlex cannot do that (see "Text
 messages" below) and carry on with the calls.
@@ -68,10 +72,18 @@ is a monthly charge with its own confirmation (the `phone-numbers` skill).
 `smartalex_create_campaign` with:
 
 - `name`, `agent_id`, `phone_number_id`
+- `purpose`: what the campaign is for (below)
 - `objective`: what the agent should achieve on each call
 - `timezone`: the people's time zone, IANA format
 - `business_hours`: the days and times calls are allowed
 - `max_attempts` and `retry_delay_minutes`, when the user wants more than one try
+
+**Purpose.** What the campaign is for. If the user already said it in so many words ("run a
+follow-up campaign", "remind everyone about tomorrow's appointment"), set it here. Otherwise never
+guess: create the campaign without it, ask in the step 6 summary, and set it with
+`smartalex_update_campaign` before starting. A campaign without a purpose cannot start. Use one
+of `sales`, `follow_up`, `appointments`, `reminders`, `collections` (money owed), `renewals`,
+`win_back` (past customers), `surveys`, or `other`.
 
 **How tries work.** `max_attempts` is the total number of calls each person can get, the first one
 included, so "try 4 times" is `max_attempts: 4` (10 at most). Only calls nobody answered (no
@@ -109,6 +121,7 @@ Show the preview together with this summary, then ask:
 
 ```
 Campaign:      <name>
+Purpose:       <purpose, or the question: what are these calls for?>
 Agent:         <agent name>
 Calling from:  <number>
 People:        <count from the preview>
@@ -134,10 +147,12 @@ for results, the `todays-calls` skill.
 ## Changing a campaign
 
 Read the campaign first with `smartalex_get_campaign`, and change only what the user asked for.
+If a start is refused because the campaign has no purpose, ask what it is for and set `purpose`
+with `smartalex_update_campaign`, then start it again.
 
 | The user wants to... | Tool |
 |---|---|
-| Change the name, objective, agent, number, tries, wait between tries, calling hours, how many calls run at once, or the voicemail and text settings | `smartalex_update_campaign`. Some settings cannot change while the campaign is running; the tool says which. |
+| Change the purpose, name, objective, agent, number, tries, wait between tries, calling hours, how many calls run at once, or the voicemail and text settings | `smartalex_update_campaign`. Some settings cannot change while the campaign is running; the tool says which. |
 | Stop calling for now | `smartalex_pause_campaign`. No new calls are placed until it is resumed. |
 | Carry on calling | `smartalex_resume_campaign`. The preview says how many people are still waiting. |
 | Start at a set time | `smartalex_schedule_campaign` |

@@ -7,7 +7,7 @@ description: Manage who is in the SmartAlex workspace and how it runs. Invite a 
 
 This mirrors the web app's **Settings → Team**, the **Business hours** section of **Settings →
 Profile**, and **Settings → Notifications**. For every tool here with a `confirm_token`, follow "The
-confirmation step" in the `smartalex` skill.
+confirmation step" in the `smartalex` skill. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 ## The team
 

@@ -5,7 +5,7 @@ description: Create a SmartAlex voice agent for a business, change what an exist
 
 # Build or change a SmartAlex voice agent
 
-For every tool here with a `confirm_token`, follow "The confirmation step" in the `smartalex` skill.
+For every tool here with a `confirm_token`, follow "The confirmation step" in the `smartalex` skill. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 ## Example: "set up an agent from my website"
 
