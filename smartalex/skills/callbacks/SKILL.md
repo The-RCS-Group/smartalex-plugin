@@ -38,7 +38,7 @@ Today
 - Priya Naidoo, +27 21 555 0103, Spring follow-up. Due 4:15 pm.
 
 Could not be called
-- Sam Lee: there is no number to call from. Add one in Calls → Numbers.
+- Sam Lee: there was no number to call from when it was due. Call back now, or put your number on an agent (Calls → Numbers).
 ```
 
 3. Offer, do not take, the next steps: call someone back now, move a callback, or cancel one. The
@@ -48,19 +48,22 @@ Could not be called
 
 `smartalex_call_back_now`. It places a real call straight away, like the page's **Call** button.
 The preview names the person and the number. Ask, and send the token only after a clear yes. It also
-needs permission to run campaigns; if the role cannot, say so plainly.
+needs permission to run campaigns; if the role cannot, say so plainly. It works for a failed callback
+too, even when its `fix` names a setup problem: the preview or the dialler says if the call cannot be
+placed, so never refuse on the fix alone.
 
 ## Reschedule or cancel
 
 These do exactly what the page's menu offers, nothing more:
 
 - **Reschedule**: `smartalex_update_callback` with the new `date` and `time` (24-hour), in the
-  workspace's time zone, today or later. If the user gives a day but no time, keep the callback's
-  current time of day and say so. Rescheduling does not revive a failed or cancelled callback; to
+  workspace's time zone, today or later. For "today" or "tomorrow", use `meta.today` or
+  `meta.tomorrow` from the list, never a date from your own clock. If the user gives a day but no
+  time, keep the callback's current time of day and say so. Rescheduling does not revive a failed or cancelled callback; to
   phone that person, use call back now.
 - **Cancel**: `smartalex_cancel_callback`. SmartAlex will not call that person. It only works on a
-  callback still waiting, and cannot be undone; a callback that failed or finished cannot be
-  cancelled.
+  callback still waiting (`can_cancel: true`), and cannot be undone; never offer to cancel one that
+  failed or finished.
 
 There is no "mark as done": a callback is done when the call is made. If the user has called the
 person themselves, cancel it so SmartAlex does not call them again.

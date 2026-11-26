@@ -83,7 +83,7 @@ connection with one read-only call. Do not send the user to a menu to sign in.
 ## What's next
 
 Run the bundled **`smartalex`** skill. It is the map: what SmartAlex can do, which skill handles
-which job, and the safety rules for anything that calls real people or spends money.
+which job, and the safety rules for anything that calls real people or deletes data.
 
 ## Support
 

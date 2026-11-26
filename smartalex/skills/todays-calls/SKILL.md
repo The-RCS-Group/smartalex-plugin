@@ -45,12 +45,16 @@ open the campaign, for the full numbers.
 
 ## Today, or a short period
 
-1. **Collect the calls.** `smartalex_list_calls` with `since` set to the start of the period (today
-   means since midnight in the workspace's time zone, or the user's own if you do not know it; say
-   which you used rather than asking) and `per_page: 100`.
+1. **Collect the calls.** `smartalex_list_calls` with `period` when the user names one (today,
+   yesterday, this_week, last_week, this_month, last_month: SmartAlex works the dates out in the
+   workspace's time zone, so never work them out yourself) or `since` otherwise, and `per_page: 100`.
+   Tell the user the dates the reply used. A call with `test_call: true` is a test, not a real
+   caller: say so, and leave tests out when they ask about real calls.
    It returns the newest first. If the filters are not accepted, page through until the calls are
    older than the period.
-2. **Read the ones that matter.** `smartalex_get_call` for each answered call. Skip unanswered calls
+2. **Read the ones that matter.** `smartalex_get_call` for each answered call. In its transcript,
+   `assistant:` is always your agent and `user:` the other person, on outbound calls too; judge the
+   agent only by its own lines. Skip unanswered calls
    (no answer, busy, failed) beyond counting them. For more than about 30 answered calls, use
    `smartalex_get_campaign_call_summary` for the period if you have it; otherwise read the longest
    calls and the ones with the lowest sentiment first, and say that you sampled.

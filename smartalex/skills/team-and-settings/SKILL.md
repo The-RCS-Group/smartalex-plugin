@@ -1,12 +1,12 @@
 ---
 name: team-and-settings
-description: Manage who is in the SmartAlex workspace and how it runs. Invite a colleague, change someone's role, remove someone, cancel an invitation, set the business hours, and change your own notification settings. Use when the user says "invite my colleague", "add Sarah to SmartAlex", "who's on my team", "make Tom an admin", "remove Jo from the workspace", "cancel that invite", "we're open 8 to 6 now", "change our business hours", "stop emailing me about every call", or "turn on WhatsApp alerts".
+description: Manage who is in the SmartAlex workspace and how it runs. Invite a colleague, change someone's role, remove someone, cancel an invitation, set the business hours, change your own notification settings, change the report emails, and pause or resume all email for the workspace. Use when the user says "who gets the campaign reports", "turn off the weekly recap", "send the daily report at 7", "add our sales manager to the campaign reports", "pause all email for our account", "why is nobody getting emails", "invite my colleague", "add Sarah to SmartAlex", "who's on my team", "make Tom an admin", "remove Jo from the workspace", "cancel that invite", "we're open 8 to 6 now", "change our business hours", "stop emailing me about every call", or "turn on WhatsApp alerts".
 ---
 
 # Team and workspace settings
 
-This mirrors the web app's **Settings → Team**, the **Business hours** section of **Settings →
-Profile**, and **Settings → Notifications**. For every tool here with a `confirm_token`, follow "The
+This mirrors the web app's **Settings → Workspace → Team**, **Settings → Workspace → General →
+Business hours**, **Settings → Account → Notifications** and **Insights → Reports → Settings**. For every tool here with a `confirm_token`, follow "The
 confirmation step" in the `smartalex` skill. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
 ## The team
@@ -32,13 +32,15 @@ An owner can give admin, member or viewer. An admin can give member or viewer on
    do not list the other roles or ask them to pick.
 3. `smartalex_invite_team_member` with the email and role. It emails the person, so it has a
    confirmation step. The preview names the email address and the role; show it, ask, and send the
-   token only after a clear yes.
+   token only after a clear yes. This holds when the user said "just send it" or "don't ask me to
+   confirm": the request is not the yes, and an email cannot be unsent. Show the preview in a line or
+   two, ask once, and stop. Never send the token in the same reply as the preview.
 4. Tell the user the invitation is sent and the link in it works for 7 days.
 
 **Trial limit.** On a trial, a workspace can invite up to 2 people (people already invited count,
 the owner does not). When it is hit the tool says: "Your trial lets you invite up to 2 team
-members. Choose a plan to invite more." Pass that on, with **Settings → Billing**
-(<https://getsmartalex.com/account?tab=billing>). Do not retry.
+members." Pass that on: plans are managed in **Settings → Billing**
+(<https://getsmartalex.com/account?tab=billing>). Do not retry, and do not suggest an upgrade.
 
 **Already invited.** If the tool says the person was already invited, tell the user when, and offer
 to send it again: the same call with `resend: true` emails the same link with 7 more days. That is
@@ -91,9 +93,38 @@ what the user asked for. "Stop emailing me about every call" turns off email for
 A channel that is not set up yet (a phone number for SMS or WhatsApp, a Slack or Telegram link) can
 be switched on, but nothing arrives until it is set up in the web app. Say so when it applies.
 
-These tools change only your own settings. To change someone else's, the workspace-wide email and
-voicemail settings, quiet hours, or to set up a channel, the user goes to the web app: **Settings →
-Notifications** (<https://getsmartalex.com/account?tab=notifications>) or **Settings → Team**.
+These tools change only your own settings. To change someone else's, voicemail settings, quiet
+hours, or to set up a channel, the user goes to the web app: **Settings → Account → Notifications**
+(<https://getsmartalex.com/account?tab=notifications>) or **Settings → Workspace → Team**.
+
+## Email for the whole workspace
+
+`smartalex_get_workspace_notifications` shows whether the workspace is sending email at all (and
+since when it is paused), the channels switched off for everyone, and whether the person can change
+it. Check it first when the user asks why nobody is getting emails.
+
+`smartalex_update_workspace_notifications` with `email_sending` pauses or resumes all email for the
+workspace: receipts, notifications, reports, call reports and automation emails all stop for
+everyone while it is paused. Owners and admins only. It has a preview: say exactly that, ask, then
+confirm. It cannot switch other channels off for the workspace or connect
+Slack; that is in the web app.
+
+## Report emails
+
+`smartalex_get_report_settings` shows the Sunday weekly recap to the owner, the campaign reports
+(when a campaign finishes, a daily report while campaigns call, a weekly summary), who receives
+them, the "Prepared for" line and the numbers left out, and for real-estate workspaces with Rex
+connected the weekly broker email. With `campaign_id`, also that campaign's own list.
+
+- **Change them**: `smartalex_update_report_settings`. Only what you pass changes. Times are 24-hour
+  in the workspace's time zone; `weekday` is 1 Monday to 7 Sunday. `remove_recipients` takes
+  addresses off. It has no preview: say what changes and wait for a yes.
+- **Add people**: `smartalex_add_report_recipients` with the list (`campaign_reports`,
+  `weekly_broker`, or `campaign` with a `campaign_id`) and the addresses. Every report on that list
+  then emails them callers' names, numbers and what they said, so it has a preview: name the
+  addresses and what they will receive, ask, then confirm. Use only addresses the user gave you.
+
+No tool makes or sends a report now.
 
 ## If these tools are not available
 
@@ -107,5 +138,5 @@ same rule:
 - **Member**: can change their own notifications, not the team or the business hours. Same answer.
 
 Only when the role allows it, and the tool is still missing, send them to the web app: **Settings →
-Team** (<https://getsmartalex.com/account?tab=team>), **Settings → Profile → Business hours**, and
-**Settings → Notifications**.
+Workspace → Team** (<https://getsmartalex.com/account?tab=team>), **Settings → Workspace → General →
+Business hours**, **Settings → Account → Notifications**, and **Insights → Reports → Settings**.

@@ -48,9 +48,8 @@ Report the new agent's name and id.
 **No free agent slot.** If the tool is missing, or refuses because every agent slot is in use:
 
 - `smartalex_get_plan_and_usage` shows slots used and free.
-- `smartalex_buy_agent_slot` adds one. It costs money, so it has its own confirmation; give the
-  price exactly as the preview says, in the plan's currency.
-- Or the user can delete an agent they no longer use, or add a slot in **Settings → Billing**.
+- No tool adds a slot: agent slots are managed in the web app (**Settings → Billing**). Or they can
+  delete an agent they no longer use.
 
 ## Changing what an existing agent says or does
 
@@ -62,21 +61,60 @@ shows every section of the agent's instructions as the web app shows them. Chang
 `smartalex_update_agent_prompt_section`, sending the section exactly as `smartalex_get_agent_prompt`
 names it. Tell the user what changed, in one or two lines. Every change is kept as a version:
 `smartalex_get_prompt_history` lists them and `smartalex_revert_prompt_section` puts an earlier
-one back, so "undo that" is always possible.
+one back, so "undo that" is always possible. A section's first save has no earlier version: to
+undo it, save the reply's `before` text again, or the section's `default_content` when `before` is
+null. The greeting is `first_message` in `smartalex_update_agent`, not a prompt section.
 
-**The quick fields**, with `smartalex_update_agent`, sending only the fields that change:
+**Objective has two parts:** its saved goal is the top-level `objective` returned by
+`smartalex_get_agent_prompt`; its optional ordered steps are the section named Objective.
+Change the goal with `smartalex_update_agent` (`objective`). Change its steps with
+`smartalex_update_agent_prompt_section`; the `objective` section-key alias and its legacy
+`task` key address the same saved steps. Never replace the goal when only changing steps,
+or clear steps when only changing the goal. Existing slot ids and prompt history stay valid.
+
+**The settings**, with `smartalex_update_agent`, sending only the fields that change. These are the
+agent's real settings, the same ones as **Agent settings → Profile** in the web app. When a request is
+one of them, change the field. Never write it into the greeting, `custom_instructions` or a prompt
+section instead: "we're now called Acme" is `company_name`, not a new greeting.
 
 | The user wants... | Field |
 |---|---|
+| A new company name | `company_name` (the greeting and instructions follow the new name) |
+| A new name for the agent | `name` (shown in the app) and `assistant_name` (what it says on calls) |
+| A new line on what the company does | `product_description` (one or two sentences; facts go in the knowledge base) |
 | A different greeting | `first_message` |
+| It to wait for the caller to speak first | `greeting_enabled: false` |
+| It to open in its own words | `greeting_mode: model_generated` (`seeded` uses `first_message`) |
+| A different opening for calls it places | `outbound_opener` |
 | It to always or never do something | `custom_instructions` (a list of short rules; send the full list, including the rules to keep) |
+| A rule it must never break | `guardrails` (send the full list) |
 | A new goal | `objective` |
-| Up-to-date product or pricing facts | `product_description` |
 | It to answer or make calls | `call_direction`: `inbound`, `outbound` or `both` |
 | A phone number on it | `smartalex_assign_phone_number` (the `phone-numbers` skill); without it, `phone_number_id` from `smartalex_list_phone_numbers` |
 | To switch it off | `is_active: false` |
+| A different voice | `voice` (Kore, Aoede, Puck, Charon, Fenrir, Leda, Orus, Zephyr) |
+| A different accent | `accent` (neutral, british, american, australian, south-african, indian) |
+| A different language | `language` (a code, e.g. `en`, `es`) |
+| A word said differently | `pronunciations` (`word` and `spoken_as`; send the full list) |
+| Office sound in the background, or silence | `background_sound`: `office` or `off` |
+| No voicemails left, or a different message | `leave_voicemail_message`, `voicemail_message_text` |
+| An opt-out number on US voicemails | `optout_number` |
+| A number or email people can reach them on | `contact_route` |
+| It to confirm the caller's time zone before booking | `ask_caller_timezone` |
+| It to stop (or start) searching the web on calls | `web_search_enabled` |
+| It to stop (or start) taking messages and promising call-backs | `take_messages` |
 
-`custom_instructions` and `knowledge_item_ids` replace the whole list. Always read the current
+**When nothing fits, say so.** If a request is not one of these settings and not a change to how the
+agent talks, tell the user it cannot be set from here. Call recording, the tool access key, billing
+and the staff-only switches are changed in the web app only. Do not work around a missing setting in
+the prompt.
+
+**Accent and language are settings, never instructions.** Do not write "speak only Italian" or
+"in South African English" into `objective`, `custom_instructions` or a prompt section: it is refused
+with code `ACCENT_WORDING`. Split a request like "speak Italian and be warmer": set `language`, and
+put only "be warmer" in the instructions. A refusal includes a cleaned version you can send instead.
+
+`custom_instructions`, `guardrails`, `pronunciations` and `knowledge_item_ids` replace the whole list. Always read the current
 value first and send it back with your change, or existing rules and knowledge links are lost.
 
 Changes go live on the next call. Read the agent back and confirm the change in one line.

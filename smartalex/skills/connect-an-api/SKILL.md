@@ -9,8 +9,8 @@ An API tool lets the agent call an HTTPS address during a call, sending details 
 conversation (an order number, say) and using the answer. The web app calls them **HTTP Tools**.
 
 API tools need the **Power Tools** add-on. If `smartalex_create_http_tool` is not available, check
-`smartalex_get_plan_and_usage` (if you have it), say what unlocks it (**Settings → Billing**), and
-stop.
+`smartalex_get_plan_and_usage` (if you have it), say the account does not have it (add-ons are
+managed in **Settings → Billing**), and stop.
 
 ## Keys never go through chat
 
@@ -61,8 +61,12 @@ the address when the user gave none, or which agent when there are several and t
    - the address, which must be public HTTPS and must exist on the internet (an address that does
      not resolve, localhost, private network and cloud metadata addresses are refused),
    - the parameters, and the sign-in type with no secret.
-5. **Give it to the agent.** `smartalex_attach_http_tool_to_agent`, to the agent the user named, or
-   their only agent. Each agent has a tool budget,
+5. **Give it to the agent.** The create reply's `agents` already lists who has it: a tool not
+   limited to agents is on every agent with HTTP Tools on. Attach only when the user's agent is not
+   listed, with `smartalex_attach_http_tool_to_agent`, to the agent the user named, or their only
+   agent. Attaching to an agent with HTTP Tools off switches them on and also gives it the other
+   unlimited tools; the reply names them, so tell the user. Never say the tool is on an agent no
+   reply names. Each agent has a tool budget,
    at most 20 tools and a size limit shared with its other tools. If it is full, the user turns
    another tool off first.
 6. **Show the request.** `smartalex_preview_http_tool_request` with example values shows the exact
