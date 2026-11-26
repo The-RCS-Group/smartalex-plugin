@@ -48,7 +48,8 @@ open the campaign, for the full numbers.
 1. **Collect the calls.** `smartalex_list_calls` with `period` when the user names one (today,
    yesterday, this_week, last_week, this_month, last_month: SmartAlex works the dates out in the
    workspace's time zone, so never work them out yourself) or `since` otherwise, and `per_page: 100`.
-   Tell the user the dates the reply used. A call with `test_call: true` is a test, not a real
+   When the period has an end before now (one day, such as Monday, or a range), add `until` at that
+   end too, so later calls are left out. Tell the user the dates the reply used. A call with `test_call: true` is a test, not a real
    caller: say so, and leave tests out when they ask about real calls.
    It returns the newest first. If the filters are not accepted, page through until the calls are
    older than the period.
