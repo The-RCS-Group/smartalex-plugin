@@ -8,9 +8,9 @@ description: Have a SmartAlex voice agent phone a list of people as a campaign, 
 This phones real people. Nothing is dialled until the user says yes to a preview. Follow "The
 confirmation step" in the `smartalex` skill for every tool here that has a `confirm_token`. Show the preview and ask even when the request already says to do it ("delete it", "just send it"): only a yes given after the preview counts.
 
-Campaign tools need the **Outbound Calling** add-on. If `smartalex_create_campaign` is not
-available, check `smartalex_get_plan_and_usage` (if you have it), tell the user what unlocks it,
-and stop.
+Campaign tools need the **Outbound Campaigns** add-on. If `smartalex_create_campaign` is not
+available, check `smartalex_get_plan_and_usage` (if you have it), say the account does not have it
+(add-ons are managed in **Settings → Billing**), and stop.
 
 ## Example: "call my last 10 prospects and try each one 4 times"
 
@@ -45,7 +45,12 @@ messages" below) and carry on with the calls.
   returns how many were created, updated and skipped, with a reason for each skip. Tell the user
   those numbers and the skip reasons. If the tool is not available, look each person up first and
   create only the missing ones with `smartalex_create_contact`. Never create the same person twice.
-- Phone numbers go in E.164, for example `+27821234567`.
+- Phone numbers go in E.164, for example `+27821234567`. A number written the local way
+  (082 123 4567) needs its country: `phone_country` on `smartalex_create_contact`, `default_country`
+  on the import. Give it only when the user said the country or it is plain from the conversation;
+  otherwise ask, and never pick one.
+- When the import skips rows for their phone number, tell the user which, and offer to add each one
+  with `smartalex_create_contact` in full international form (+ and the country code).
 
 Drop anyone with no phone number and tell the user how many you dropped.
 
@@ -64,8 +69,8 @@ in step 4 rather than changing the agent.
 
 `smartalex_list_phone_numbers`. Pick the number yourself and say which: the only one; otherwise
 one in the same country as the people being called; otherwise one on the chosen agent. Ask only if
-that still leaves a real choice. If there are none, say so and stop; never buy one unasked. Buying
-is a monthly charge with its own confirmation (the `phone-numbers` skill).
+that still leaves a real choice. If there are none, say so and stop: numbers are added in the web
+app (**Calls → Numbers**).
 
 ## 4. Create the campaign
 
@@ -161,6 +166,27 @@ with `smartalex_update_campaign`, then start it again.
 
 If one of these tools is not available, they can do it in the web app: **Pipeline → Campaigns**,
 then open the campaign.
+
+## Let another system add people (a campaign web address)
+
+`smartalex_create_trigger_webhook` gives a campaign a web address and a secret. A CRM, a form,
+Zapier or a schedule can then post people to it, one at a time or up to 100 at once, and each one
+joins the running campaign and is called inside its calling hours. Owners and admins only.
+
+- Use it when the user wants new leads called "automatically", "as they come in from the form", or
+  "from HubSpot". Create or pick the campaign first.
+- `basis` is why these people may be called: `express_consent` (they asked to be called),
+  `written_consent`, `existing_customer`, or `other` with a `basis_note`. Ask the user which; never
+  pick it for them. `wording_version` is the version of the consent wording they agreed to: if you
+  do not know it, call once with your best guess; an out-of-date version is refused with the current
+  wording, which you show the user and then use.
+- Do not guess what else it needs. Call it for the preview: a refusal says what is missing (a call
+  plan built in the web app, or the Outbound Calling Policy accepted there).
+- Every person posted there gets phoned, so it has a preview: say which campaign, the daily cap and
+  cool-down if set, ask, then confirm.
+- The reply gives the address, the secret and the request format once. Put the secret only where the
+  user's other system keeps secrets (an environment variable or its secret store), never in a
+  commit, a log or the chat history. `rotate_secret` gives a new one and stops the old.
 
 ## Text messages
 

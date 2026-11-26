@@ -61,7 +61,7 @@ curl -fsSL https://raw.githubusercontent.com/The-RCS-Group/smartalex-plugin/main
 | `smartalex/skills/call-a-list` | Phone a list as a campaign, and change, pause or resume it, only after you confirm |
 | `smartalex/skills/todays-calls` | What happened on today's calls or a whole campaign, who to follow up, the month's figures, and the call records export |
 | `smartalex/skills/callbacks` | Who asked to be called back, call them back, reschedule or cancel; block and unblock callers |
-| `smartalex/skills/phone-numbers` | Which agent answers each number, move a number, buy or release one |
+| `smartalex/skills/phone-numbers` | Which agent answers each number, move a number, find or release one |
 | `smartalex/skills/team-and-settings` | Invite colleagues, change roles, business hours and your own notifications |
 
 No server code lives here. The plugin only points your agent at SmartAlex and teaches it the

@@ -1,7 +1,7 @@
 {
   "name": "smartalex",
-  "description": "Run your SmartAlex AI phone team from Claude Code: voice agents and what they know, API tools, contacts, campaigns, calls and callbacks, phone numbers, team, analytics, deals, webhooks and the website widget.",
-  "version": "0.4.2",
+  "description": "Run your SmartAlex AI phone team from Claude Code: voice agents and what they know, call transfers, API tools and connected apps, contacts, campaigns, calls and callbacks, automations and Instagram and Facebook comment replies, phone numbers, team, report emails, analytics, deals, webhooks and the website widget.",
+  "version": "0.4.3",
   "author": {
     "name": "SmartAlex",
     "email": "support@getsmartalex.com",

@@ -1,6 +1,6 @@
 ---
 name: smartalex
-description: The map of SmartAlex, the AI phone team platform. Use whenever the user mentions SmartAlex, their voice agent, AI receptionist, call campaigns, call transcripts, or wants an AI to answer or make phone calls for their business, or asks about their callbacks, phone numbers, team or analytics. Explains what each smartalex_* tool does, which skill handles which job, how the confirmation step works, what to do when a tool is refused, and the safety rules for anything that calls real people, spends money or deletes data.
+description: The map of SmartAlex, the AI phone team platform. Use whenever the user mentions SmartAlex, their voice agent, AI receptionist, call campaigns, call transcripts, or wants an AI to answer or make phone calls for their business, or asks about their callbacks, phone numbers, call transfers, automations, Instagram or Facebook comment replies, connected apps, report emails, team or analytics. Explains what each smartalex_* tool does, which skill handles which job, how the confirmation step works, what to do when a tool is refused, and the safety rules for anything that calls real people or deletes data.
 ---
 
 # SmartAlex
@@ -21,10 +21,14 @@ You reach it through the `smartalex` MCP server. If no `smartalex_*` tools are a
 | Create a voice agent, change what it says or knows, or try it with a test call | `build-an-agent` |
 | Let an agent look something up in, or send something to, another system during a call | `connect-an-api` |
 | Have the AI phone a list of people, or change, pause or resume a campaign | `call-a-list` |
+| Let a CRM, form or Zapier add people to a running campaign by itself (a campaign web address) | `call-a-list` |
 | Know what happened on today's calls, review a whole campaign, see how the workspace did this month, or export the calls | `todays-calls` |
 | See who to call back, call someone back, or block a caller | `callbacks` |
-| Move a number to another agent, buy a number or release one | `phone-numbers` |
-| Invite a colleague, change roles, set business hours or their own notifications | `team-and-settings` |
+| Move a number to another agent, find an available number, or release one | `phone-numbers` |
+| Have the agent put live callers through to a person or line, or change who it transfers to | `call-transfers` |
+| See, switch on or off the automations, or set up Instagram and Facebook comment-to-DM replies | `automations` |
+| Connect Google, a CRM or another app, add their own MCP server, or give an agent a connected app's tools | `connectors` |
+| Invite a colleague, change roles, set business hours or their own notifications, change the report emails, or pause all email for the workspace | `team-and-settings` |
 | Connect, reconnect or fix sign-in | `setup` |
 
 Anything else, use the tools below directly.
@@ -33,25 +37,29 @@ Anything else, use the tools below directly.
 
 | Area | Tools |
 |---|---|
-| Account | `smartalex_get_platform_status`, `smartalex_get_plan_and_usage` (plan, add-ons, minutes or credits left, wallet balance, agent slots used and free), `smartalex_buy_agent_slot` |
-| Contacts | `smartalex_list_contacts` (search and filters, with a total count), `smartalex_get_contact`, `smartalex_create_contact`, `smartalex_update_contact`, `smartalex_import_contacts` (up to 1000 rows a call), `smartalex_delete_contact` |
+| Account | `smartalex_get_platform_status`, `smartalex_get_plan_and_usage` (plan, add-ons, minutes or credits left, wallet balance, agent slots used and free) |
+| Contacts | `smartalex_find_contact` (one person by name, number or email, however it is written), `smartalex_list_contacts` (search and filters, with a total count), `smartalex_get_contact`, `smartalex_create_contact`, `smartalex_update_contact`, `smartalex_import_contacts` (up to 1000 rows a call), `smartalex_delete_contact` |
 | Agents | `smartalex_list_agents`, `smartalex_get_agent`, `smartalex_create_agent`, `smartalex_update_agent`, `smartalex_delete_agent` |
 | Agent prompt | `smartalex_get_agent_prompt`, `smartalex_update_agent_prompt_section`, `smartalex_get_prompt_history`, `smartalex_revert_prompt_section` |
 | Agent knowledge | `smartalex_list_knowledge`, `smartalex_add_knowledge_text`, `smartalex_add_knowledge_from_website`, `smartalex_get_knowledge_import_status`, `smartalex_link_knowledge_to_agent`, `smartalex_unlink_knowledge_from_agent`, `smartalex_delete_knowledge_item`. This is the business's own knowledge base, the facts its agents use on calls. |
 | API tools | `smartalex_list_http_tools`, `smartalex_create_http_tool`, `smartalex_update_http_tool`, `smartalex_attach_http_tool_to_agent`, `smartalex_detach_http_tool_from_agent`, `smartalex_preview_http_tool_request`, `smartalex_delete_http_tool` |
 | Test calls | `smartalex_start_test_call`, `smartalex_get_test_call_result` |
-| Phone numbers | `smartalex_list_phone_numbers`, `smartalex_assign_phone_number` (which agent a number is on, and whether it calls out from it), `smartalex_search_available_numbers`, `smartalex_buy_phone_number`, `smartalex_release_phone_number` |
-| Campaigns | `smartalex_list_campaigns`, `smartalex_get_campaign`, `smartalex_create_campaign`, `smartalex_update_campaign`, `smartalex_add_contacts_to_campaign`, `smartalex_remove_contacts_from_campaign`, `smartalex_start_campaign`, `smartalex_schedule_campaign`, `smartalex_pause_campaign`, `smartalex_resume_campaign`, `smartalex_stop_campaign` |
+| Phone numbers | `smartalex_list_phone_numbers`, `smartalex_assign_phone_number` (which agent a number is on, and whether it calls out from it), `smartalex_search_available_numbers` (what is available), `smartalex_release_phone_number` |
+| Campaigns | `smartalex_list_campaigns`, `smartalex_get_campaign`, `smartalex_create_campaign`, `smartalex_update_campaign`, `smartalex_add_contacts_to_campaign`, `smartalex_remove_contacts_from_campaign`, `smartalex_start_campaign`, `smartalex_schedule_campaign`, `smartalex_pause_campaign`, `smartalex_resume_campaign`, `smartalex_stop_campaign`, `smartalex_create_trigger_webhook` (a web address other systems post people to) |
 | Calls | `smartalex_list_calls` (filter by campaign, agent, contact, outcome, direction and dates), `smartalex_get_call` (transcript and summary), `smartalex_get_campaign_call_summary` (totals counted on the server), `smartalex_export_calls` (the call records file, as a link that expires) |
 | Analytics | `smartalex_get_analytics` (the Analytics page's figures for a period) |
+| Call transfers | `smartalex_get_agent_transfers`, `smartalex_set_transfer_destination` (add or change a person or line), `smartalex_remove_transfer_destination`, `smartalex_turn_on_agent_transfers`, `smartalex_set_agent_transfers` (turn off, or change "When to transfer") |
+| Automations | `smartalex_list_automations`, `smartalex_enable_automation`, `smartalex_disable_automation`, and Instagram and Facebook comment-to-DM: `smartalex_create_comment_automation`, `smartalex_update_comment_automation`, `smartalex_delete_comment_automation`, `smartalex_get_comment_automation_log` |
+| Connectors | `smartalex_list_connectors` (curated connectors, the workspace's own, and the built-in integrations), `smartalex_get_integration_status`, `smartalex_connect_integration` (a one-time sign-in link), `smartalex_add_custom_connector`, `smartalex_remove_custom_connector`, `smartalex_set_agent_connector` (which of a connector's tools an agent has) |
+| Report emails | `smartalex_get_report_settings`, `smartalex_update_report_settings`, `smartalex_add_report_recipients` |
 | Callbacks | `smartalex_list_callbacks`, `smartalex_update_callback` (reschedule), `smartalex_cancel_callback`, `smartalex_call_back_now` |
 | Blocked callers | `smartalex_list_blocked_callers`, `smartalex_block_caller`, `smartalex_unblock_caller` |
 | Team | `smartalex_list_team` (members and open invitations), `smartalex_invite_team_member`, `smartalex_change_member_role`, `smartalex_remove_team_member`, `smartalex_revoke_invitation` |
-| Workspace settings | `smartalex_get_business_hours`, `smartalex_update_business_hours`, `smartalex_get_notification_settings`, `smartalex_update_notification_settings` (the signed-in person's own) |
+| Workspace settings | `smartalex_get_business_hours`, `smartalex_update_business_hours`, `smartalex_get_notification_settings`, `smartalex_update_notification_settings` (the signed-in person's own), `smartalex_get_workspace_notifications`, `smartalex_update_workspace_notifications` (pause or resume all email for the whole workspace) |
 | Deals | `smartalex_list_deals`, `smartalex_create_deal`, `smartalex_update_deal`, `smartalex_delete_deal` |
 | Webhooks | `smartalex_list_webhooks`, `smartalex_create_webhook`, `smartalex_delete_webhook` |
 | Website | `smartalex_get_widget_install_code` |
-| SmartAlex help | `smartalex_search_company_knowledge` searches SmartAlex's own help docs: plans, pricing, setup and policies. It does not search the user's knowledge base, so never present its answers as the user's own prices or policies. For the user's knowledge base, use the Agent knowledge tools. |
+| SmartAlex help | `smartalex_search_company_knowledge` searches SmartAlex's own help docs: setup, features and policies. It does not search the user's knowledge base, so never present its answers as the user's own prices or policies. For the user's knowledge base, use the Agent knowledge tools. |
 
 ## Decide, do not ask
 
@@ -71,7 +79,9 @@ chose in your reply, and the user can change it when they answer.
 Each person only gets the tools their plan, add-ons and role allow. A tool you cannot see is
 hidden on purpose, not broken. Some examples:
 
-- Campaigns and buying numbers need the **Outbound Calling** add-on.
+- Campaigns need the **Outbound Campaigns** add-on.
+- Nothing here sells or adds numbers, agent slots, add-ons or plans: those are managed in the web
+  app (see "Money" below).
 - API tools, and creating or deleting webhooks, need **Power Tools**.
 - Webhooks, and managing the team, are for workspace owners and admins only.
 - Phone numbers, callbacks and blocked callers are not on the free plan.
@@ -91,7 +101,7 @@ When a tool you need is missing, find out why before you answer:
 
 Anything that costs money, phones, texts or emails a person, or deletes something, goes through a
 confirmation step on the server. You can tell, because the tool has a `confirm_token` argument and
-its description says CONFIRMATION REQUIRED.
+its description ends with "Confirmation step".
 
 1. Call the tool **without** `confirm_token`. Nothing happens yet. You get back a preview
    (`status: "confirmation_required"`): what will happen, what it costs, how many people will be
@@ -127,10 +137,11 @@ different answer, and never try to get round a refusal with a different tool.
 
 | The error | What it means | What to tell the user |
 |---|---|---|
-| 402, or "requires the ... add-on" | Their plan or add-ons do not include this. | Say which add-on or plan it needs, with the price the error gives. Add-ons and plans are bought in the web app: **Settings → Billing** (<https://getsmartalex.com/account?tab=billing>). Do not retry. |
-| 402 about agent slots | Every agent slot is in use. | Offer `smartalex_buy_agent_slot` if you have it (it has its own confirmation), or **Settings → Billing**. They can also delete an agent they no longer use. |
+| 402, or "requires the ... add-on" | Their plan or add-ons do not include this. | Say which add-on or plan it needs, with no price and no push to upgrade. Add-ons and plans are managed in the web app: **Settings → Billing** (<https://getsmartalex.com/account?tab=billing>). Do not retry. |
+| 402 about agent slots | Every agent slot is in use. | Agent slots are managed in the web app: **Settings → Billing**. They can also delete an agent they no longer use. |
 | 403, "your role can't do this" | Their role in this workspace does not allow it. | Suggest asking a workspace owner or admin to do it, or to change their role. |
 | 403, "this connection is read-only" | The sign-in or key can only read. | Suggest an owner or admin gives them access that can make changes. |
+| 403, "business check is approved" | A new workspace cannot place calls (test calls, call backs, campaigns) until SmartAlex approves its business details. | Do not retry. They send their business details and registration document in the web app: **Calls → Verification** (<https://getsmartalex.com/phone/verification>). It usually takes one business day. |
 | 403 with any other message | A rule, not their role (for example a trial limit). | Pass the message on in plain words. |
 | 401, or "sign-in has expired" | The SmartAlex connection needs signing in again. | Run the `setup` skill from step 3 to reconnect. This often happens after they sign in to the SmartAlex website with two-step login; reconnecting fixes it. |
 
@@ -141,18 +152,29 @@ Never show the user raw error codes like `ADDON_REQUIRED`; use plain words.
 1. **Real people.** `smartalex_start_campaign`, `smartalex_resume_campaign`,
    `smartalex_schedule_campaign`, `smartalex_add_contacts_to_campaign` (on a running campaign),
    `smartalex_start_test_call` and `smartalex_call_back_now` phone real people, and
-   `smartalex_invite_team_member` emails one. Say who, how many, and when, and get a yes.
-2. **Money.** `smartalex_buy_phone_number` is a monthly charge; `smartalex_buy_agent_slot` is a
-   charge too. Say what it costs in the plan's currency, exactly as the preview gives it. Never
-   convert a price into another currency yourself.
+   `smartalex_invite_team_member` emails one. `smartalex_set_transfer_destination` and
+   `smartalex_turn_on_agent_transfers` put live callers through to a number;
+   `smartalex_enable_automation` lets an automation message or phone people by itself;
+   `smartalex_create_comment_automation` and `smartalex_update_comment_automation` DM everyone whose
+   comment matches; `smartalex_add_report_recipients` emails callers' details to new addresses;
+   `smartalex_create_trigger_webhook` lets another system add people the campaign will phone. Say
+   who, how many, and when, and get a yes.
+2. **Money.** Nothing here sells or adds numbers, agent slots, add-ons or plans: those are managed
+   in the web app, **Calls → Numbers** or **Settings → Billing**. Never quote a price and never
+   suggest an upgrade. When a preview names a cost, pass it on exactly as given, in the plan's
+   currency; never convert it yourself.
 3. **Deletes cannot be undone.** `smartalex_delete_agent`, `smartalex_delete_contact`,
    `smartalex_delete_deal`, `smartalex_delete_knowledge_item`, `smartalex_delete_http_tool`,
-   `smartalex_delete_webhook`, `smartalex_release_phone_number` and `smartalex_remove_team_member`.
+   `smartalex_delete_webhook`, `smartalex_release_phone_number`, `smartalex_remove_team_member`,
+   `smartalex_remove_transfer_destination`, `smartalex_remove_custom_connector` and
+   `smartalex_delete_comment_automation`.
    A deleted agent stops answering calls immediately; a released number is gone for good. Name what
    will be deleted.
 4. **Secrets never go through chat.** Never ask for, accept, repeat or store an API key, password,
    token or auth header. Where one is needed, the user pastes it in the web app (see
-   `connect-an-api`). The one exception is the webhook signing secret that
+   `connect-an-api` and `connectors`). A connector that needs a key or client secret is added in the
+   web app, and a sign-in link from `smartalex_connect_integration` is opened by the user, never by
+   you. The one exception is the webhook signing secret that
    `smartalex_create_webhook` returns once: put it straight into the project's secret store or an
    untracked `.env` file, never in a commit, a log or a file that git tracks.
 5. **No text after the last attempt.** SmartAlex cannot send a text message after a campaign's
@@ -163,7 +185,9 @@ Also:
 
 - Contacts: create a person once with `smartalex_create_contact`, then use
   `smartalex_update_contact` with the returned `id` for anything new. Calling create twice makes a
-  duplicate. Look the person up first.
+  duplicate. Look the person up first with `smartalex_find_contact`, which matches a name, an email
+  or a number however it is written ("082 123 4567" finds +27821234567), and returns close spellings
+  marked "similar" when nothing matches exactly: ask before treating a similar match as the person.
 - Transcripts and contact details are personal data. Show what the user asked for; do not paste
   whole transcripts into files, commits or issue trackers unless they ask.
 - Recordings are not shared through these tools. Do not try to find or build a recording link.
@@ -187,8 +211,12 @@ Always give the click path, not just a web address.
 - Proof of identity for a number: **Calls → Verification** (<https://getsmartalex.com/phone/verification>)
 - Figures for a period: **Analytics** (<https://getsmartalex.com/analytics>)
 - Call records file: **Settings → Billing → Records → Statement**, then **Download → Call records**
-- Team and invitations: **Settings → Team** (<https://getsmartalex.com/account?tab=team>)
-- Business hours: **Settings → Profile → Business hours**
-- Notifications: **Settings → Notifications** (<https://getsmartalex.com/account?tab=notifications>)
+- Team and invitations: **Settings → Workspace → Team** (<https://getsmartalex.com/account?tab=team>)
+- Business hours: **Settings → Workspace → General → Business hours** (<https://getsmartalex.com/account?tab=workspace>)
+- Notifications, and the workspace's email switch: **Settings → Account → Notifications** (<https://getsmartalex.com/account?tab=notifications>)
+- Call transfers: **Home → agent menu → Agent settings → Tools → Transfer Call** (<https://getsmartalex.com/home>)
+- Automations and comment-to-DM: **Automations** (<https://getsmartalex.com/automations>)
+- Connectors: **Agent Settings → Connectors** (<https://getsmartalex.com/home?settings=connectors>)
+- Report emails: **Insights → Reports → Settings** (<https://getsmartalex.com/reports?tab=settings>)
 - Docs: <https://docs.getsmartalex.com/mcp/overview>
 - Support: <support@getsmartalex.com>

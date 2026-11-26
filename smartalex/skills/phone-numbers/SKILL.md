@@ -1,6 +1,6 @@
 ---
 name: phone-numbers
-description: Manage the business's SmartAlex phone numbers. See which agent answers each number, put a number on an agent or move it to another one, buy a number, or release one for good. Use when the user says "move my number to the new agent", "put my new number on the Sales agent", "which agent answers my number", "take the number off this agent", "buy a London number", "release this number", "we don't need this number any more", or asks why they cannot get a number in their country.
+description: Manage the business's SmartAlex phone numbers. See which agent answers each number, put a number on an agent or move it to another one, find an available number, or release one for good. Use when the user says "move my number to the new agent", "put my new number on the Sales agent", "which agent answers my number", "take the number off this agent", "find a London number", "release this number", "we don't need this number any more", or asks why they cannot get a number in their country.
 ---
 
 # Phone numbers
@@ -42,16 +42,13 @@ To take a number off every agent, assign it to no agent (`agent_id: null`), like
 agent** choice. To stop an agent calling out from a number but keep it answering, set
 `in_rotation: false`, like **Remove from rotation**.
 
-## Buy a number
+## Find a number
 
-`smartalex_search_available_numbers` with the country, then `smartalex_buy_phone_number`. Buying is
-a monthly charge and has its own confirmation: give the price exactly as the preview says, in the
-plan's currency. Pick the country from what you know (the business's other numbers, or the people
-it calls) and say which you chose; ask only if there is no clue. Put the new number on an agent
-afterwards with `smartalex_assign_phone_number`.
-
-Buying numbers needs the **Outbound Calling** add-on. The web app: **Calls → Numbers → Buy
-number**.
+`smartalex_search_available_numbers` with the country shows which numbers are available. Pick the
+country from what you know (the business's other numbers, or the people it calls) and say which you
+chose; ask only if there is no clue, and never assume the US. Adding a number to the account
+happens in the web app: **Calls → Numbers**. Once it is there, put it on an agent with
+`smartalex_assign_phone_number`.
 
 ## Release a number
 
