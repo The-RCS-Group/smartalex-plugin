@@ -57,12 +57,15 @@ curl -fsSL https://raw.githubusercontent.com/The-RCS-Group/smartalex-plugin/main
 | `smartalex/skills/add-voice-widget` | Put the voice and chat widget on the site in this codebase |
 | `smartalex/skills/webhooks` | Receive signed call events in your own backend |
 | `smartalex/skills/build-an-agent` | Create, change and test-call a voice agent, and manage what it knows |
+| `smartalex/skills/call-transfers` | Who an agent puts live callers through to and when; add, change or remove a transfer, or turn transfers off |
 | `smartalex/skills/connect-an-api` | Let an agent use your own API during calls (keys stay in the web app) |
+| `smartalex/skills/connectors` | Connect Google, HubSpot and other apps, add your own MCP server, and choose which of their tools each agent uses |
 | `smartalex/skills/call-a-list` | Phone a list as a campaign, and change, pause or resume it, only after you confirm |
 | `smartalex/skills/todays-calls` | What happened on today's calls or a whole campaign, who to follow up, the month's figures, and the call records export |
 | `smartalex/skills/callbacks` | Who asked to be called back, call them back, reschedule or cancel; block and unblock callers |
 | `smartalex/skills/phone-numbers` | Which agent answers each number, move a number, find or release one |
 | `smartalex/skills/team-and-settings` | Invite colleagues, change roles, business hours and your own notifications |
+| `smartalex/skills/automations` | See your automations and switch them on or off, and set up Instagram and Facebook comment-to-DM replies |
 
 No server code lives here. The plugin only points your agent at SmartAlex and teaches it the
 workflows.
